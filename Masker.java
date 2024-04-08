@@ -1,59 +1,102 @@
-import java.util.Map;
-
 public class Masker {
 
-    public Object masker(Object object) {
-        if (object != null) {
-            // Masking logic for each string field
-            ((Object) object).first_name = maskString(((Object) object).first_name);
-            ((Object) object).last_name = maskString(((Object) object).last_name);
-            ((Object) object).date_of_birth = maskString(((Object) object).date_of_birth);
-            ((Object) object).email_address = maskString(((Object) object).email_address);
-            return (Object) object;
+   private Information input;
+
+   public Masker (Information input) {
+
+       this.input = input;
+   }
+
+   public Masker() {
+
+   }
+
+    private Information masker (Information input) {
+
+       Information output = new Information();
+
+       String lastName = input.last_name;
+
+        String firstName = input.first_name;
+
+        String email = input.email_address;
+
+        String date = input.date_of_birth;
+
+
+      String firstEmailChars = email.substring(0, 2);
+
+      String maskedEmail = firstEmailChars + email.substring(2).replaceAll("\\w", "*");
+
+      output.setEmail(maskedEmail);
+
+
+      String firstDateChars = date.substring(0, 2);
+
+      String maskedDate = firstDateChars + date.substring(2).replaceAll("\\d", "*");
+
+      output.setDate(maskedDate);
+
+       if (lastName.length() > 3) {
+
+          String firstChars = lastName.substring(0,2);
+
+          //i assume all names are validated to be just alphanums
+          String maskedLastName = firstChars + lastName.substring(2).replaceAll("\\w", "*");
+
+          output.setLastName(maskedLastName);
+       }
+
+       if (lastName.length() <= 3) {
+
+           String firstChars = lastName.substring(0, 1);
+
+           String maskedLastName = firstChars + lastName.substring(1).replaceAll("\\w", "*");
+
+           output.setLastName(maskedLastName);
+       }
+
+        if (firstName.length() > 3) {
+
+            String firstChars = firstName.substring(0,2);
+
+            String maskedFirstName = firstChars + lastName.substring(1).replaceAll("\\w", "*");
+
+            output.setFirstName(maskedFirstName);
         }
-        return object;
+
+        if (firstName.length() <= 3) {
+
+            String firstChars = firstName.substring(0, 1);
+
+            String maskedFirstName = firstChars + lastName.substring(1).replaceAll("\\w", "*");
+
+            output.setFirstName(maskedFirstName);
+        }
+
+
+        return output;
+
     }
 
-    private String maskString(String input) {
-        if (input != null && input.length() > 3) {
+   public static void main (String[] args) {
 
-            String firstTwoChars = input.substring(0, 2);
-            String maskedChars = input.substring(2).replaceAll(".", "*");
-            return firstTwoChars + maskedChars;
-        }
+       Masker masker = new Masker();
 
-        else if(input != null && input.length() <= 3 ) {
+       Information input = new Information();
 
-            String firstChars = input.substring(0, 1);
+       input.first_name = "John";
+       input.last_name = "Doe";
+       input.date_of_birth = "1990-01-01";
+       input.email_address = "john.doe@example.com";
 
-            String maskedChars = input.substring(1).replaceAll(".", "*");
-        }
+       Information output = masker.masker(input);
 
+       System.out.println("output:");
+       System.out.println("First Name: " + output.first_name);
+       System.out.println("Last Name: " + output.last_name);
+       System.out.println("Date of Birth: " + output.date_of_birth);
+       System.out.println("Email Address: " + output.email_address);
 
-        //else {
-            //return input;
-        //}
-        return input;
-    }
-
-    public static void main(String[] args) {
-
-        Masker masker = new Masker();
-
-
-        Object obj = new Object();
-        obj.first_name = "John";
-        obj.last_name = "Doe";
-        obj.date_of_birth = "1990-01-01";
-        obj.email_address = "john.doe@example.com";
-
-
-        Object maskedObject = masker.masker(obj);
-
-        System.out.println("Masked Object:");
-        System.out.println("First Name: " + maskedObject.first_name);
-        System.out.println("Last Name: " + maskedObject.last_name);
-        System.out.println("Date of Birth: " + maskedObject.date_of_birth);
-        System.out.println("Email Address: " + maskedObject.email_address);
-    }
+   }
 }
