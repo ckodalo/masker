@@ -3,43 +3,53 @@ import java.util.Map;
 public class Masker {
 
     public Object masker(Object object) {
-        if (object instanceof Object) {
-            Object customObject = (Object) object;
+        if (object != null) {
             // Masking logic for each string field
-            customObject.first_name = maskString(customObject.first_name);
-            customObject.last_name = maskString(customObject.last_name);
-            customObject.date_of_birth = maskString(customObject.date_of_birth);
-            customObject.email_address = maskString(customObject.email_address);
-            return customObject;
+            ((Object) object).first_name = maskString(((Object) object).first_name);
+            ((Object) object).last_name = maskString(((Object) object).last_name);
+            ((Object) object).date_of_birth = maskString(((Object) object).date_of_birth);
+            ((Object) object).email_address = maskString(((Object) object).email_address);
+            return (Object) object;
         }
+        return object;
     }
 
     private String maskString(String input) {
-        if (input != null && input.length() > 2) {
+        if (input != null && input.length() > 3) {
 
             String firstTwoChars = input.substring(0, 2);
             String maskedChars = input.substring(2).replaceAll(".", "*");
             return firstTwoChars + maskedChars;
-        } else {
-            return input;
         }
+
+        else if(input != null && input.length() <= 3 ) {
+
+            String firstChars = input.substring(0, 1);
+
+            String maskedChars = input.substring(1).replaceAll(".", "*");
+        }
+
+
+        //else {
+            //return input;
+        //}
+        return input;
     }
 
     public static void main(String[] args) {
-        // Example usage
+
         Masker masker = new Masker();
 
-        // Create an instance of your custom Object class
+
         Object obj = new Object();
         obj.first_name = "John";
         obj.last_name = "Doe";
         obj.date_of_birth = "1990-01-01";
         obj.email_address = "john.doe@example.com";
 
-        // Mask the object
+
         Object maskedObject = masker.masker(obj);
 
-        // Print the masked object
         System.out.println("Masked Object:");
         System.out.println("First Name: " + maskedObject.first_name);
         System.out.println("Last Name: " + maskedObject.last_name);
